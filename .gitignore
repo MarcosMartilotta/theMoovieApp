@@ -106,3 +106,4 @@ dist
 
 #Secrets.js (API_KEY)   
 src/secrets.js
+notas.md
