@@ -81,4 +81,19 @@ async function getCategoriesPreview() {
     renderCategories(categories, categoriesPreviewList)
 }
 
+async function getMoviesBySearch(query){
+    const { data } = await api('search/movie', {
+        params: {
+            query,
+        }
+    });
+    const movies = data.results;
+    renderPageMovies(genericSection, movies );
+}
 
+async function getTrendingMovies() {
+    //peticion
+    const { data } = await api(`trending/movie/day`);
+    const movies = data.results;
+    renderPageMovies(genericSection, movies);
+}
