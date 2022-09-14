@@ -94,6 +94,10 @@ function moviesDetailsPage(){
     movieDetailSection.classList.remove('inactive');
     
     console.log('Movie!!');
+
+    const [_, movieId] = location.hash.split('=');
+    getMovieById(movieId);
+    getRelatedMoviesId(movieId);
 }
 function searchPage(){
     headerSection.classList.remove('header-container--long');
