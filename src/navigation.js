@@ -1,3 +1,6 @@
+let maxPage;
+let page = 1;
+let infiniteScroll;
 
 searchFormBtn.addEventListener('click', () => {
     location.hash = `#search=${searchFormInput.value.trim()}`; //Uso trim para eliminar espacios en blanco al inicio y al final
@@ -15,10 +18,17 @@ arrowBtn.addEventListener('click', () => {
 
 window.addEventListener('DOMContentLoaded', navigator, false);
 window.addEventListener('hashchange', navigator, false);
+window.addEventListener('scroll', infiniteScroll, false);
 
 
+// Validaciones
 function navigator() {
     console.log( {location} );
+
+    if (infiniteScroll) {
+        window.removeEventListener('scroll', infiniteScroll, {pasive : false});
+        infiniteScroll = undefined;
+    }
     
     if(location.hash.startsWith('#trends=')) {
         trendsPage()
@@ -34,8 +44,13 @@ function navigator() {
     
     document.documentElement.scrolltop = 0;
     document.body.scrollTop = 0;
+
+    if(infiniteScroll) {
+        window.addEventListener('scroll', infiniteScroll, {pasive : false}); 
+    }
 }
 
+// Paginas
 function homePage(){
     console.log('Home!!');
 
@@ -134,4 +149,6 @@ function trendsPage(){
 
     headerCategoryTitle.innerHTML = 'Tendencias'
     getTrendingMovies();
+
+    infiniteScroll = getPaginatedTrendingMovies;
 }

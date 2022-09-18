@@ -21,8 +21,12 @@ const lazyLoader = new IntersectionObserver((entries) => {
     })
 })
 
-function renderPageMovies(pageName, movies, lazyLoad = false){
-    pageName.innerHTML = "";
+function renderPageMovies(pageName, movies, {lazyLoad= false, clean = true} = {}){
+
+    if(clean){
+        pageName.innerHTML = "";
+    }
+    
     movies.forEach(movie => {
         
         const movieContainer = document.createElement('div');
@@ -81,7 +85,7 @@ async function getTrendingMoviesPreview() {
     //peticion
     const { data } = await api(`trending/all/day`);
     const movies = data.results;
-    renderPageMovies(trendingMoviesPreviewList, movies, true);
+    renderPageMovies(trendingMoviesPreviewList, movies, {lazyLoad: true});
 }
 
 async function getMoviesByCategory(id) {
@@ -93,7 +97,7 @@ async function getMoviesByCategory(id) {
     });
     const movies = data.results;
 
-    renderPageMovies(genericSection, movies, true);
+    renderPageMovies(genericSection, movies, {lazyLoad: true});
 }
 
 async function getCategoriesPreview() {
@@ -112,15 +116,50 @@ async function getMoviesBySearch(query){
         }
     });
     const movies = data.results;
-    renderPageMovies(genericSection, movies, true);
+    renderPageMovies(genericSection, movies, {lazyLoad: true});
 }
 
 async function getTrendingMovies() {
     //peticion
     const { data } = await api(`trending/movie/day`);
     const movies = data.results;
-    renderPageMovies(genericSection, movies, true);
+    maxPage = data.total_pages;
+    renderPageMovies(genericSection, movies, {lazyLoad: true, clean: true});
+
+
+  /*   const btnLoadMore = document.createElement('button');
+    btnLoadMore.innerText = 'Cargar mas';
+    btnLoadMore.addEventListener('click', getPaginatedTrendingMovies);
+    genericSection.appendChild(btnLoadMore); */
 }
+
+
+async function getPaginatedTrendingMovies() {
+
+    const {scrollTop, scrollHeight, clientHeight} = document.documentElement;
+
+    const scrollIsBottom = (scrollTop + clientHeight) >= (scrollHeight - 15);
+
+    const pageIsNotMax = page < maxPage;
+
+    if (scrollIsBottom && pageIsNotMax) {
+        page++;
+        const { data } = await api(`trending/movie/day`, {
+            params: {
+                page,
+            }
+        });
+        const movies = data.results;
+        
+        renderPageMovies(genericSection, movies, {lazyLoad: true, clean: false});
+       /*  const btnLoadMore = document.createElement('button');
+        btnLoadMore.innerText = 'Cargar mas';
+        btnLoadMore.addEventListener('click', getPaginatedTrendingMovies);
+        genericSection.appendChild(btnLoadMore); */
+
+    }
+}
+
 
 async function getMovieById(id) {
     const { data: movie } = await api(`movie/${id}`); //renombro el objeto data como movie
