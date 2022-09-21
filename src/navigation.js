@@ -13,7 +13,6 @@ trendingBtn.addEventListener('click', () => {
 arrowBtn.addEventListener('click', () => {
 
     location.hash = window.history.back();
-
 });
 
 window.addEventListener('DOMContentLoaded', navigator, false);
@@ -35,15 +34,16 @@ function navigator() {
     } else if (location.hash.startsWith('#search=')){
         searchPage()
     } else if (location.hash.startsWith('#movie=')){
-        moviesDetailsPage();
+        movieDetailsPage();
     } else if (location.hash.startsWith('#category=')){
         categoriesPage();
     } else {
         homePage();
     }
     
-    document.documentElement.scrolltop = 0;
-    document.body.scrollTop = 0;
+    window.scroll({top: 0 });
+  /*   document.body.scrollTop = 0;
+    document.documentElement.scrolltop = 0; */
 
     if(infiniteScroll) {
         window.addEventListener('scroll', infiniteScroll, {pasive : false}); 
@@ -64,12 +64,15 @@ function homePage(){
 
     trendingPreviewSection.classList.remove('inactive');
     categoriesPreviewSection.classList.remove('inactive');
+    likedMoviesSection.classList.remove('inactive');
     genericSection.classList.add('inactive');
     movieDetailSection.classList.add('inactive');
     
     getTrendingMoviesPreview();
     getCategoriesPreview();
+    getLikedMovies();
 }
+
 function categoriesPage(){
     console.log('Categories!!');
 
@@ -83,18 +86,24 @@ function categoriesPage(){
 
     trendingPreviewSection.classList.add('inactive');
     categoriesPreviewSection.classList.add('inactive');
+    likedMoviesSection.classList.add('inactive');
     genericSection.classList.remove('inactive');
     movieDetailSection.classList.add('inactive');
 
-const [_, categoryData] = location.hash.split('='); // [categotyId, categoryName]
+    const [_, categoryData] = location.hash.split('='); // [categotyId, categoryName]
 
-const [categoryId, categoryName] = categoryData.split('-'); //La url la armo con simbolos que pueda usar para separar y quedarme con el ID
+    const [categoryId, categoryName] = categoryData.split('-'); //La url la armo con simbolos que pueda usar para separar y quedarme con el ID
 
-headerCategoryTitle.innerHTML = categoryName;
+    headerCategoryTitle.innerHTML = categoryName;
 
     getMoviesByCategory(categoryId);
+
+    infiniteScroll = getPaginatedMoviesByCategory(categoryId);
 }
-function moviesDetailsPage(){
+
+function movieDetailsPage(){
+    console.log('Movie!!');
+
     headerSection.classList.add('header-container--long');
     /* headerSection.style.background = ''; */
     arrowBtn.classList.remove('inactive'); 
@@ -105,16 +114,18 @@ function moviesDetailsPage(){
 
     trendingPreviewSection.classList.add('inactive');
     categoriesPreviewSection.classList.add('inactive');
+    likedMoviesSection.classList.add('inactive');
     genericSection.classList.add('inactive');
     movieDetailSection.classList.remove('inactive');
     
-    console.log('Movie!!');
 
     const [_, movieId] = location.hash.split('=');
     getMovieById(movieId);
-    getRelatedMoviesId(movieId);
 }
+
 function searchPage(){
+    console.log('Search!!');
+
     headerSection.classList.remove('header-container--long');
     headerSection.style.background = '';
     arrowBtn.classList.remove('inactive'); 
@@ -125,14 +136,19 @@ function searchPage(){
 
     trendingPreviewSection.classList.add('inactive');
     categoriesPreviewSection.classList.add('inactive');
+    likedMoviesSection.classList.add('inactive');
     genericSection.classList.remove('inactive');
     movieDetailSection.classList.add('inactive');
-    console.log('Search!!');
 
     const [_, query] = location.hash.split('=');
     getMoviesBySearch(query);
+
+    infiniteScroll = getPaginatedMoviesBySearch(query);// esto no funciona sin hacer una closure porque se esta ejecutando
 }
+
 function trendsPage(){
+    console.log('Trends!!');
+
     headerSection.classList.remove('header-container--long');
     headerSection.style.background = '';
     arrowBtn.classList.remove('inactive'); 
@@ -143,11 +159,12 @@ function trendsPage(){
 
     trendingPreviewSection.classList.add('inactive');
     categoriesPreviewSection.classList.add('inactive');
+    likedMoviesSection.classList.add('inactive');
     genericSection.classList.remove('inactive');
     movieDetailSection.classList.add('inactive');
-    console.log('Trends!!');
 
-    headerCategoryTitle.innerHTML = 'Tendencias'
+    headerCategoryTitle.innerHTML = 'Tendencias';
+
     getTrendingMovies();
 
     infiniteScroll = getPaginatedTrendingMovies;
