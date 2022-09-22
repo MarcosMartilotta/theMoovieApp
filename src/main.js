@@ -1,5 +1,6 @@
 //Data
 const api = axios.create({
+    
     baseURL: 'https://api.themoviedb.org/3/',
     headers: {
         'Content-Type': 'application/json;charset=utf-8',
@@ -24,15 +25,16 @@ function likedMoviesList() {
 
 function likeMovie(movie) {
     // movie.id
-    const likedMovies = likedMoviesList();
+    const likedMovies = likedMoviesList(); //Devuelve el objeto donde la key es el id de cada pelicula
 
-    if (likedMovies[movie.id]) {
+    if (likedMovies[movie.id]) { //Si existe lo pongo como undefined (pasa cuando lo apreto de nuevo)
         likedMovies[movie.id] = undefined;
     } else {
-        likedMovies[movie.id] = movie;
+        likedMovies[movie.id] = movie; //Si no existe la agrego (pasa cuando no la aprete nunca)
     }
 
     localStorage.setItem('liked_movies', JSON.stringify(likedMovies));
+    
 }
 
 //Utils 
@@ -81,6 +83,8 @@ function renderPageMovies(pageName, movies, { lazyLoad = false, clean = true } =
             e.stopPropagation();
             movieBtn.classList.toggle('movie-btn--liked');
             likeMovie(movie);
+            getLikedMovies();
+            getTrendingMoviesPreview();
         });
 
         if (lazyLoad) {
@@ -121,16 +125,22 @@ function renderCategories(categories, container) {
 // LLamados a la API
 async function getTrendingMoviesPreview() {
     //peticion
-    const { data } = await api(`trending/all/day`);
+    const { data } = await api(`trending/all/day`, {
+        params: {
+            'language': language,
+        }
+    });
     const movies = data.results;
     renderPageMovies(trendingMoviesPreviewList, movies, { lazyLoad: true });
 }
 
 async function getMoviesByCategory(id) {
     //peticion
+    console.log(languageSelector.value)
     const { data } = await api(`discover/movie`, {
         params: {
             with_genres: id,
+            'language': language,
         }
     });
     const movies = data.results;
@@ -155,6 +165,7 @@ function getPaginatedMoviesByCategory(id) {
                 params: {
                     page,
                     with_genres: id,
+                    'language': language,
                 }
             });
 
@@ -169,8 +180,13 @@ function getPaginatedMoviesByCategory(id) {
 
 
 async function getCategoriesPreview() {
+    console.log(language);
     //peticion
-    const { data } = await api(`/genre/movie/list`);
+    const { data } = await api(`/genre/movie/list`, {
+        params: {
+            'language': language,
+        }
+    });
 
     const categories = data.genres;
 
@@ -182,6 +198,7 @@ async function getMoviesBySearch(query) {
     const { data } = await api('search/movie', {
         params: {
             query,
+            'language': language,
         }
     });
     const movies = data.results;
@@ -206,6 +223,7 @@ function getPaginatedMoviesBySearch(query) {
                 params: {
                     page,
                     query,
+                    'language': language,
                 }
             });
 
@@ -220,7 +238,11 @@ function getPaginatedMoviesBySearch(query) {
 
 async function getTrendingMovies() {
     //peticion
-    const { data } = await api(`trending/movie/day`);
+    const { data } = await api(`trending/movie/day`, {
+        params: {
+            'language': language,
+        }
+    });
     const movies = data.results;
     maxPage = data.total_pages;
     renderPageMovies(genericSection, movies, { lazyLoad: true, clean: true });
@@ -253,7 +275,11 @@ async function getPaginatedTrendingMovies() {
 
 
 async function getMovieById(id) {
-    const { data: movie } = await api(`movie/${id}`); //renombro el objeto data como movie
+    const { data: movie } = await api(`movie/${id}`, {
+        params: {
+            'language': language,
+        }
+    }); //renombro el objeto data como movie
 
     const movieImgUrl = `https://image.tmdb.org/t/p/w500/${movie.poster_path}`;
 
@@ -272,7 +298,11 @@ async function getMovieById(id) {
 
 
 async function getRelatedMoviesId(id) {
-    const { data } = await api(`movie/${id}/recommendations`);
+    const { data } = await api(`movie/${id}/recommendations`, {
+        params : {
+            'language': language,
+        }
+    });
     const relatedMovies = data.results;
     console.log(relatedMovies);
 
@@ -289,3 +319,12 @@ function getLikedMovies() {
     console.log(likedMovies);
 }
 
+//Setea el lenguaje
+
+function setLanguage () {
+    languageSelector.addEventListener('change', () => {
+        localStorage.setItem('savedLanguage', languageSelector.value);
+        language = localStorage.getItem('savedLanguage');
+        homePage();
+    })
+}
