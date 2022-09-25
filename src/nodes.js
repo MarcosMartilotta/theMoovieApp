@@ -14,6 +14,12 @@ const movieDetailCategoriesList = document.querySelector('#movieDetail .categori
 const relatedMoviesContainer = document.querySelector('.relatedMovies-scrollContainer');
 const likedMoviesListArticle = document.querySelector('.liked-movieList');
 const languageSelector = document.querySelector('.languages');
+const french = document.querySelector('.french');
+const spanish = document.querySelector('.spanish');
+const japanese = document.querySelector('.japanese');
+const english = document.querySelector('.english');
+
+
 // Elements
 const headerTitle = document.querySelector('.header-title');
 const arrowBtn = document.querySelector('.header-arrow');

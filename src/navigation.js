@@ -73,6 +73,7 @@ function homePage(){
     getCategoriesPreview();
     getLikedMovies();
     setLanguage();
+    changeList(); 
 }
 
 function categoriesPage(){

@@ -328,3 +328,15 @@ function setLanguage () {
         homePage();
     })
 }
+
+ function changeList(){
+    if(language == 'fr'){
+        french.setAttribute('selected', '');
+    } else if (language == 'es-US') {
+        spanish.setAttribute('selected', '');
+    } else if (language == 'ja') {
+        japanese.setAttribute('selected', '');
+    } else if (language == 'en') {
+        english.setAttribute('selected', '');
+    }
+} //language es una variable que accede al idioma seleccionado que está guardado en localStorage

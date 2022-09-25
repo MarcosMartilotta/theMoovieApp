@@ -37,8 +37,9 @@ body {
     font-family: var(--font-family-text);
     font-weight: var(--font-weight-text1);
     font-size: 16px;
-    margin: 4px 0 0 0;
+    margin: 0 auto;
     padding: 0;
+    max-width: 420px;
 }
 
 h1,
@@ -179,7 +180,7 @@ footer {
     height: 480px;
     position: fixed;
     top: 0;
-    width: 100%;
+    width: 400px;
 }
 
 .header-container--categoryView {
@@ -251,7 +252,7 @@ footer {
 .trendingPreview-btn {
     border-radius: 8px;
     height: 32px;
-    width: 72px;
+    width: 90px;
 }
 
 .trendingPreview-movieList,
@@ -270,10 +271,6 @@ footer {
     margin-right: 8px;
 }
 
-/* .relatedMovies-scrollContainer .movie-container {
-    display: inline-block;
-    margin-right: 8px;
-} */
 
 .genericList-container .movie-container--skeleton,
 .relatedMovies-scrollContainer .movie-container--skeleton,
@@ -483,7 +480,7 @@ footer {
 
 /* Movie Detail */
 .movieDetail-container {
-    width: 100%;
+    width: 400px;
     border-top-left-radius: 16px;
     border-top-right-radius: 16px;
     padding: 32px 24px;
@@ -531,6 +528,7 @@ footer {
 .relatedMovies-container {
     margin-top: 24px;
     height: 216px;
+    width: 400px;
 }
 
 .relatedMovies-title {
@@ -542,13 +540,15 @@ footer {
     overflow-x: scroll;
     overflow-y: hidden;
     white-space: nowrap;
-    width: calc(100vw - 24px);
+    max-width: 400px;
     padding-bottom: 16px;
+    left: 0px
 }
 
 .relatedMovies-scrollContainer .movie-container {
     display: inline-block;
     margin-right: 8px;
+    max-width: 400px;
 }
 
 .relatedMovies-scrollContainer .movie-img {
